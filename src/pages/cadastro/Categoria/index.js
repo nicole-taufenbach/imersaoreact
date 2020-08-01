@@ -1,7 +1,8 @@
-import React, { useState }from 'react';
+import React, { useState, useEffect }from 'react';
 import PageDefault from '../../../components/PageDefault';
 import { Link } from 'react-router-dom';
 import FormField from '../../../components/FormField';
+import Button from '../../../components/Button';
 
 function CadastroCategoria() {
   const valoresIniciais = {
@@ -25,6 +26,20 @@ function setValue(chave, valor) {
       infosDoEvento.target.value
     );
   }
+  useEffect(() => {
+    if(window.location.href.includes('localhost')) {
+      const URL = 'http://localhost:3000/categorias'; 
+      fetch(URL)
+       .then(async (respostaDoServer) =>{
+        if(respostaDoServer.ok) {
+          const resposta = await respostaDoServer.json();
+          setCategorias(resposta);
+          return; 
+        }
+        throw new Error('Não foi possível pegar os dados');
+       })
+    }    
+  }, []);
 
   return (
     <PageDefault>
@@ -48,17 +63,13 @@ function setValue(chave, valor) {
         onChange={handleChange}
         />
 
-        <div>
-          <label>
-           Descrição:
-            <input
-            type="text" 
-            value={values.cor}
-            name="descricao"
-            onChange={handleChange}
-            />
-          </label>
-        </div>
+        <FormField 
+        label="Descrição"
+        type="textarea"
+        name="descricao"
+        value={values.descricao}
+        onChange={handleChange}
+        />
 
         <FormField
         label="Cor"
@@ -79,27 +90,26 @@ function setValue(chave, valor) {
           </label>
         </div> */}
 
-          <button>
+          <Button>
             Cadastrar
-          </button>
+          </Button>
         </form>
 
-            <ul>
-              {categoria.map((categoria, indice) => {
-                return (
-                  <li key={`${categoria}${indice}`}>
-                    {categoria.nome}
-                  </li>
-                )
-              })}
+        <ul>
+        {categoria.map((categoria, indice) => {
+          return (
+            <li key={`${categoria}${indice}`}>
+              {categoria.titulo}
+            </li>
+          )
+        })}
+      </ul>
 
-            </ul>
-
-        <Link to="/">
+      <Link to="/">
         Ir para home
-        </Link>
-      </PageDefault>
-    )
-  }
+      </Link>
+    </PageDefault>
+  )
+}
 
   export default CadastroCategoria;
