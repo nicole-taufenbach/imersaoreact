@@ -28,7 +28,7 @@ function setValue(chave, valor) {
   }
   useEffect(() => {
     if(window.location.href.includes('localhost')) {
-      const URL = 'http://localhost:3000/categorias'; 
+      const URL = 'https://nintendofliximersaoreact.herokuapp.com/categorias'; 
       fetch(URL)
        .then(async (respostaDoServer) =>{
         if(respostaDoServer.ok) {
